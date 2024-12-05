@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    
+    <!-- Error Message Display -->
+    <div th:if="${param.error}">
+        <p style="color: red;">Invalid username or password. Please try again.</p>
+    </div>
+
+    <form action="#" th:action="@{/login}" method="post">
+        <!-- CSRF Token for Protection -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" name="username" placeholder="Username" required>
+        </div>
+
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <!-- Remember Me Option (Optional) -->
+        <div>
+            <label>
+                <input type="checkbox" name="remember-me"> Remember me
+            </label>
+        </div>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Link to registration page -->
+    <div>
+        <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
+    </div>
+</body>
+</html>
