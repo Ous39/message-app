@@ -1,17 +1,17 @@
 # Stage 1: Build the application using Maven
 FROM maven:3.9.4-eclipse-temurin-17 AS build
 
+# Install Git
+RUN apt-get update && apt-get install -y git
+
 # Set the working directory inside the build container
 WORKDIR /app
 
-# Copy the Maven configuration file
-COPY pom.xml .
+# Clone the repository from GitHub
+RUN git clone https://github.com/Ous39/message-app.git .
 
 # Download dependencies to optimize builds
 RUN mvn dependency:go-offline -B
-
-# Copy the application source code
-COPY src ./src
 
 # Build the application
 RUN mvn clean package -DskipTests
@@ -29,4 +29,4 @@ COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
