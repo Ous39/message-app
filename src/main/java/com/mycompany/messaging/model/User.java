@@ -1,9 +1,7 @@
 package com.mycompany.messaging.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users") // Explicit table name
@@ -13,22 +11,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Size(min = 3, max = 50) // Enforces username length constraints
+    //@NotBlank
+    //@Size(min = 3, max = 50) // Enforces username length constraints
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @NotBlank
-    @Size(min = 8) // Enforces minimum password length
+    //@NotBlank
+    //@Size(min = 8) // Enforces minimum password length
     @Column(nullable = false)
     private String password;
 
-    @Email // Validates email format
-    @NotBlank
+    //@Email // Validates email format
+    //@NotBlank
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @Size(max = 15) // Allows for phone number constraints
+    //@Size(max = 15) // Allows for phone number constraints
     @Column(length = 15)
     private String phone;
 

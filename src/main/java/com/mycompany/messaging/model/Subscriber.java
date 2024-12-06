@@ -1,6 +1,7 @@
 package com.mycompany.messaging.model;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "subscribers") // Explicit table name

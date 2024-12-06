@@ -1,18 +1,19 @@
 package com.mycompany.messaging.config;
 
 import com.mycompany.messaging.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
+public class SecurityConfig {
+    @Autowired
     private final UserService userService;
 
     public SecurityConfig(UserService userService) {
@@ -24,30 +25,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-    }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+
         http
-            .csrf().disable() // Disable CSRF for simplicity in development; consider enabling in production
-            .authorizeRequests()
-            .antMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll() // Allow static resources
-            .anyRequest().authenticated()
-            .and()
-            .formLogin()
+                .csrf().disable() // Disable CSRF for simplicity in development; consider enabling in production
+                .authorizeRequests()
+                .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll() // Allow static resources
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/", true) // Redirect to the home page on successful login
                 .permitAll()
-            .and()
-            .logout()
+                .and()
+                .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
-            .and()
-            .exceptionHandling()
+                .and()
+                .exceptionHandling()
                 .accessDeniedPage("/access-denied"); // Handle unauthorized access
+
+        return http.build();
     }
 }
